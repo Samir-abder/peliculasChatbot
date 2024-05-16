@@ -2,7 +2,10 @@ import discord
 from discord.ext import commands
 import moviepy.editor
 
-bot = commands.Bot(command_prefix='!')
+intents = discord.Intents.default()
+intents.messages = True  #para que el bot pueda recibir mensajes
+
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 def extraerAudio(video):
     video = moviepy.editor.VideoFileClip(video)
@@ -13,11 +16,24 @@ def extraerAudio(video):
 async def convertir(ctx):
     video = ctx.message.attachments[0].url
     audio = extraerAudio(video)
-    audio.write_audiofile("sample.mp3")
+    audio.write_audiofile("etsample.mp3")
+
+    #Crea objeto discord.File con el archivo MP3
+    audio_file = discord.File("etsample.mp3")
+
+    #Enviar el archivo MP3 al channel
+    await ctx.send(file=audio_file)
+
     await ctx.send("¡Audio convertido!")
+
+
+
+@bot.command()
+async def hola(ctx):
+    await ctx.send('¡Hola mundo!')
 
 @bot.event
 async def on_ready():
     print(f'Bot conectado como {bot.user}')
 
-bot.run('TU_TOKEN_DEL_BOT')
+bot.run('MTI0MDUyNjMxMjMzMDg4NzIzOA.G8hwA_.q3mM8ALAMaL22PaYVSO9CpTdrZHZ4GfjiF-wX0')
