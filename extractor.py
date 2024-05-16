@@ -1,14 +1,23 @@
+import discord
+from discord.ext import commands
 import moviepy.editor
-from tkinter.filedialog import *
+
+bot = commands.Bot(command_prefix='!')
 
 def extraerAudio(video):
     video = moviepy.editor.VideoFileClip(video)
     audio = video.audio
     return audio
 
-
-def pruebaTkinter():
-    video = askopenfilename()
+@bot.command()
+async def convertir(ctx):
+    video = ctx.message.attachments[0].url
     audio = extraerAudio(video)
     audio.write_audiofile("sample.mp3")
-    print("Completed!")
+    await ctx.send("¡Audio convertido!")
+
+@bot.event
+async def on_ready():
+    print(f'Bot conectado como {bot.user}')
+
+bot.run('TU_TOKEN_DEL_BOT')
